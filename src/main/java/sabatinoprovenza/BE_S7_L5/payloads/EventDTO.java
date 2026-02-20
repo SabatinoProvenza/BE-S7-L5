@@ -22,5 +22,5 @@ public record EventDTO(@NotBlank(message = "Titolo obbligatorio")
                        @NotNull(message = "Inserire i posti massimi")
                        @Min(1)
                        @Max(100000)
-                       int maxSeats) {
+                       Integer maxSeats) {
 }
