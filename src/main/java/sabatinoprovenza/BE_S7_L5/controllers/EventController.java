@@ -1,5 +1,6 @@
 package sabatinoprovenza.BE_S7_L5.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
@@ -10,9 +11,11 @@ import sabatinoprovenza.BE_S7_L5.entities.User;
 import sabatinoprovenza.BE_S7_L5.exceptions.ValidationExceptions;
 import sabatinoprovenza.BE_S7_L5.payloads.EventDTO;
 import sabatinoprovenza.BE_S7_L5.payloads.EventResponseDTO;
+import sabatinoprovenza.BE_S7_L5.payloads.EventUpdateDTO;
 import sabatinoprovenza.BE_S7_L5.services.EventService;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/events")
@@ -43,5 +46,25 @@ public class EventController {
     @GetMapping
     public List<Event> findAllEvents() {
         return eventService.findAllEvents();
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ORGANIZER')")
+    public Event updateEvent(
+            @PathVariable UUID id,
+            @RequestBody EventUpdateDTO req,
+            @AuthenticationPrincipal User user
+    ) {
+        return eventService.updateEvent(id, req, user);
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ORGANIZER')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteEvent(
+            @PathVariable UUID id,
+            @AuthenticationPrincipal User user
+    ) {
+        eventService.deleteEvent(id, user);
     }
 }
